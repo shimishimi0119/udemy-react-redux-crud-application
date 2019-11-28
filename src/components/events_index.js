@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { readEvents } from '../actions';
 import { Link } from 'react-router-dom';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContendAdd from 'material-ui/svg-icons/content/add';
 
 class EventsIndex extends Component {
   componentDidMount() {
@@ -11,30 +13,38 @@ class EventsIndex extends Component {
   }
   renderEvents() {
     return _.map(this.props.events, event => (
-      <tr key={event.id}>
-        <td>{event.id}</td>
-        <td>
+      <TableRow key={event.id}>
+        <TableRowColumn>{event.id}</TableRowColumn>
+        <TableRowColumn>
           <Link to={`/events/${event.id}`}>{event.title}</Link>
-        </td>
-        <td>{event.body}</td>
-      </tr>
+        </TableRowColumn>
+        <TableRowColumn>{event.body}</TableRowColumn>
+      </TableRow>
     ));
   }
 
   render() {
+    const style = {
+      position: 'fixed',
+      right: 12,
+      bottom: 12
+    };
+
     return (
       <React.Fragment>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Body</th>
-            </tr>
-          </thead>
-          <tbody>{this.renderEvents()}</tbody>
-        </table>
-        <Link to="/events/new">hello link</Link>
+        <Table>
+          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+            <TableRow>
+              <TableHeaderColumn>ID</TableHeaderColumn>
+              <TableHeaderColumn>Title</TableHeaderColumn>
+              <TableHeaderColumn>Body</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>{this.renderEvents()}</TableBody>
+        </Table>
+        <FloatingActionButton style={style} containerElement={<Link to="/events/new" />}>
+          <ContendAdd />
+        </FloatingActionButton>
       </React.Fragment>
     );
   }
