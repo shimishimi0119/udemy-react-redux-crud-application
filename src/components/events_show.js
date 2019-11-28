@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
 
-import { postEvent } from '../actions';
+import { getEvent, deleteEvent, putEvent } from '../actions';
 
-class EventsNew extends Component {
+class Eventsshow extends Component {
   constructor(props) {
     super(props);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
   }
   renderField(field) {
     const {
@@ -28,10 +29,14 @@ class EventsNew extends Component {
     await this.props.postEvent(values);
     this.props.history.push('/');
   }
+  async onDeleteClick() {
+    console.log(this.props.match);
+    const { id } = this.props.match.params;
+    this.props.history.push('/');
+    this.props.deleteEvent(id);
+  }
 
   render() {
-    console.log('render');
-    console.log(this.props);
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <React.Fragment>
@@ -45,6 +50,9 @@ class EventsNew extends Component {
           <div>
             <input type="submit" value="Submit" disabled={pristine || submitting} />
             <Link to="/">キャンセル</Link>
+            <Link to="/" onClick={this.onDeleteClick}>
+              DELETE
+            </Link>
           </div>
         </form>
         <div>foo</div>
@@ -55,7 +63,7 @@ class EventsNew extends Component {
 
 // const mapStateToProps = state => ({ events: state.events });
 
-const mapDispatchToProps = { postEvent };
+const mapDispatchToProps = { deleteEvent };
 
 const validate = values => {
   const errors = {};
@@ -64,5 +72,5 @@ const validate = values => {
   return errors;
 };
 
-export default connect(null, mapDispatchToProps)(reduxForm({ validate, form: 'eventNewForm' })(EventsNew));
+export default connect(null, mapDispatchToProps)(reduxForm({ validate, form: 'eventNewForm' })(Eventsshow));
 // export default connect(mapStateToProps, mapDispatchToProps)(EventsIndex);
